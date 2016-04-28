@@ -6,12 +6,21 @@
 package address.AddressManagement;
 
 import java.awt.Color;
-
+import entity.AddressManagement.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
 /**
  *
  * @author QuestionBoy
  */
+
+
 public class AddressManagementGUI extends javax.swing.JFrame {
+    
 
     /**
      * Creates new form AddressManagementGUI
@@ -33,8 +42,9 @@ public class AddressManagementGUI extends javax.swing.JFrame {
         AddressManagementPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("AddressManagementPU").createEntityManager();
         addressQuery = java.beans.Beans.isDesignTime() ? null : AddressManagementPUEntityManager.createQuery("SELECT a FROM Address a");
         addressList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : addressQuery.getResultList();
+        jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        table = new javax.swing.JTable();
         add = new javax.swing.JButton();
         searchButton = new javax.swing.JButton();
         province = new javax.swing.JTextField();
@@ -45,20 +55,39 @@ public class AddressManagementGUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ, addressList, jTable1, "addressName");
+        table.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
+        org.jdesktop.swingbinding.JTableBinding jTableBinding = org.jdesktop.swingbinding.SwingBindings.createJTableBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ, addressList, table, "addressName");
         org.jdesktop.swingbinding.JTableBinding.ColumnBinding columnBinding = jTableBinding.addColumnBinding(org.jdesktop.beansbinding.ELProperty.create("${name}"));
-        columnBinding.setColumnName("Address");
+        columnBinding.setColumnName("Name");
         columnBinding.setColumnClass(String.class);
         bindingGroup.addBinding(jTableBinding);
         jTableBinding.bind();
-        jTable1.addInputMethodListener(new java.awt.event.InputMethodListener() {
+        table.addInputMethodListener(new java.awt.event.InputMethodListener() {
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
             }
             public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-                jTable1InputMethodTextChanged(evt);
+                tableInputMethodTextChanged(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(table);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         add.setText("Thêm");
         add.addActionListener(new java.awt.event.ActionListener() {
@@ -68,6 +97,11 @@ public class AddressManagementGUI extends javax.swing.JFrame {
         });
 
         searchButton.setText("Tìm");
+        searchButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                searchButtonMouseClicked(evt);
+            }
+        });
 
         province.setForeground(new java.awt.Color(204, 204, 204));
         province.setText("Nhập tên tỉnh");
@@ -121,9 +155,6 @@ public class AddressManagementGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(23, 23, 23)
@@ -140,7 +171,10 @@ public class AddressManagementGUI extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(246, 246, 246)
                                 .addComponent(add)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 119, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -151,8 +185,8 @@ public class AddressManagementGUI extends javax.swing.JFrame {
                     .addComponent(searchButton)
                     .addComponent(province, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(addProvince, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addDistrict, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -180,9 +214,9 @@ public class AddressManagementGUI extends javax.swing.JFrame {
         province.setForeground(Color.black);
     }//GEN-LAST:event_provinceMouseClicked
 
-    private void jTable1InputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_jTable1InputMethodTextChanged
+    private void tableInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_tableInputMethodTextChanged
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTable1InputMethodTextChanged
+    }//GEN-LAST:event_tableInputMethodTextChanged
 
     private void addAddressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAddressActionPerformed
         // TODO add your handling code here:
@@ -211,6 +245,13 @@ public class AddressManagementGUI extends javax.swing.JFrame {
         addAddress.setText("");
         addAddress.setForeground(Color.black);
     }//GEN-LAST:event_addAddressMouseClicked
+
+    private void searchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButtonMouseClicked
+        // TODO add your handling code here:
+        String provinceName=province.getText();
+        java.util.List<entity.AddressManagement.Address> provinceList=AddressManagementPUEntityManager.createNamedQuery("Province.findByName").setParameter("name",provinceName).getResultList();
+        table = new javax.swing.JTable();
+    }//GEN-LAST:event_searchButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -256,10 +297,11 @@ public class AddressManagementGUI extends javax.swing.JFrame {
     private javax.swing.JTextField addWard;
     private java.util.List<entity.AddressManagement.Address> addressList;
     private javax.persistence.Query addressQuery;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField province;
     private javax.swing.JButton searchButton;
+    private javax.swing.JTable table;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }
