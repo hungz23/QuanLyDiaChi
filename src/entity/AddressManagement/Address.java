@@ -5,6 +5,8 @@
  */
 package entity.AddressManagement;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -13,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -30,6 +33,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Address.findByDistrictid", query = "SELECT a FROM Address a WHERE a.districtid = :districtid"),
     @NamedQuery(name = "Address.findByProvinceid", query = "SELECT a FROM Address a WHERE a.provinceid = :provinceid")})
 public class Address implements Serializable {
+
+    @Transient
+    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -69,7 +75,9 @@ public class Address implements Serializable {
     }
 
     public void setAddressid(Integer addressid) {
+        Integer oldAddressid = this.addressid;
         this.addressid = addressid;
+        changeSupport.firePropertyChange("addressid", oldAddressid, addressid);
     }
 
     public String getName() {
@@ -77,7 +85,9 @@ public class Address implements Serializable {
     }
 
     public void setName(String name) {
+        String oldName = this.name;
         this.name = name;
+        changeSupport.firePropertyChange("name", oldName, name);
     }
 
     public String getWardid() {
@@ -85,7 +95,9 @@ public class Address implements Serializable {
     }
 
     public void setWardid(String wardid) {
+        String oldWardid = this.wardid;
         this.wardid = wardid;
+        changeSupport.firePropertyChange("wardid", oldWardid, wardid);
     }
 
     public String getDistrictid() {
@@ -93,7 +105,9 @@ public class Address implements Serializable {
     }
 
     public void setDistrictid(String districtid) {
+        String oldDistrictid = this.districtid;
         this.districtid = districtid;
+        changeSupport.firePropertyChange("districtid", oldDistrictid, districtid);
     }
 
     public String getProvinceid() {
@@ -101,7 +115,9 @@ public class Address implements Serializable {
     }
 
     public void setProvinceid(String provinceid) {
+        String oldProvinceid = this.provinceid;
         this.provinceid = provinceid;
+        changeSupport.firePropertyChange("provinceid", oldProvinceid, provinceid);
     }
 
     @Override
@@ -127,6 +143,14 @@ public class Address implements Serializable {
     @Override
     public String toString() {
         return "entity.AddressManagement.Address[ addressid=" + addressid + " ]";
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.removePropertyChangeListener(listener);
     }
     
 }
