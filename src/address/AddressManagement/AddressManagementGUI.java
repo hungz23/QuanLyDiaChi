@@ -5,6 +5,8 @@
  */
 package address.AddressManagement;
 
+import static address.AddressManagement.Level.district;
+import static address.AddressManagement.Level.province;
 import java.awt.Color;
 import entity.AddressManagement.*;
 import java.beans.Beans;
@@ -33,6 +35,7 @@ public class AddressManagementGUI extends javax.swing.JFrame {
      */
     public AddressManagementGUI() {
         initComponents();
+        level=province;
          if (!Beans.isDesignTime()) {
             AddressManagementPUEntityManager.getTransaction().begin();
         }
@@ -177,20 +180,25 @@ public class AddressManagementGUI extends javax.swing.JFrame {
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         // TODO add your handling code here:
-        String provinceName=provinceText.getText();
-        javax.persistence.Query query=AddressManagementPUEntityManager.createNamedQuery("Province.findByName").setParameter("name", provinceName+"%");
-        java.util.List<Province> result=query.getResultList();
-        DefaultListModel model= new DefaultListModel();
-        for(Province a:result){
-            model.addElement(a.getName());
+        switch(level){
+            case province:
+            String provinceName=provinceText.getText();
+            javax.persistence.Query query=AddressManagementPUEntityManager.createNamedQuery("Province.findByName").setParameter("name", provinceName+"%");
+            java.util.List<Province> result=query.getResultList();
+            DefaultListModel model= new DefaultListModel();
+            for(Province a:result){
+                model.addElement(a.getName());
+            }
+            infoList=new JList(model);
+            infoList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                        infoListValueChanged(evt);
+                    }
+             });
+            infoListView.setViewportView(infoList);
+            level=district;
+            break;
         }
-        infoList=new JList(model);
-        infoList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-        public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                    infoListValueChanged(evt);
-                }
-            });
-        infoListView.setViewportView(infoList);
     }//GEN-LAST:event_searchButtonActionPerformed
 
     private void addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMouseClicked
@@ -276,4 +284,5 @@ public class AddressManagementGUI extends javax.swing.JFrame {
     private javax.swing.JTextField provinceText;
     private javax.swing.JButton searchButton;
     // End of variables declaration//GEN-END:variables
+   private Level level;
 }
