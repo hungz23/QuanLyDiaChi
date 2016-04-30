@@ -184,6 +184,11 @@ public class AddressManagementGUI extends javax.swing.JFrame {
         for(Province a:result){
             model.addElement(a.getName());
         }
+        infoList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                    infoListValueChanged(evt);
+                }
+            });
         infoList=new JList(model);
         infoListView.setViewportView(infoList);
     }//GEN-LAST:event_searchButtonActionPerformed
@@ -195,9 +200,9 @@ public class AddressManagementGUI extends javax.swing.JFrame {
 
     private void infoListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_infoListValueChanged
         // TODO add your handling code here:
-        ListModel model=infoList.getModel();
+        ListModel model1=infoList.getModel();
         String provinceid=new String();
-        String provinceName=(String) model.getElementAt(evt.getFirstIndex());
+        String provinceName=(String) model1.getElementAt(evt.getFirstIndex());
         javax.persistence.Query query=AddressManagementPUEntityManager.createNamedQuery("Province.findByName").setParameter("name", provinceName);
         java.util.List<Province> provinceList=query.getResultList();
         for(Province province: provinceList){
@@ -205,6 +210,20 @@ public class AddressManagementGUI extends javax.swing.JFrame {
         }
         query=AddressManagementPUEntityManager.createNamedQuery("District.findByProvinceid").setParameter("provinceid", provinceid);
         java.util.List<District> districtList=query.getResultList();
+        
+        DefaultListModel model= new DefaultListModel();
+        for(District district:districtList){
+            model.addElement(district.getName());
+        }
+        infoList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                    infoListValueChanged(evt);
+                }
+            });
+        infoList=new JList(model);
+        infoListView.setViewportView(infoList);
+        
+        // Textfield
     }//GEN-LAST:event_infoListValueChanged
 
     /**
