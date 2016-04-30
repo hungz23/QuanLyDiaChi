@@ -17,6 +17,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.ListModel;
 import javax.xml.bind.annotation.XmlRootElement;
 /**
  *
@@ -95,6 +96,11 @@ public class AddressManagementGUI extends javax.swing.JFrame {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
+        });
+        infoList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                infoListValueChanged(evt);
+            }
         });
         infoListView.setViewportView(infoList);
 
@@ -186,6 +192,11 @@ public class AddressManagementGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
       
     }//GEN-LAST:event_addMouseClicked
+
+    private void infoListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_infoListValueChanged
+        // TODO add your handling code here:
+        ListModel model=infoList.getModel();
+    }//GEN-LAST:event_infoListValueChanged
 
     /**
      * @param args the command line arguments
