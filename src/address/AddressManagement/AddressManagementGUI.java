@@ -180,8 +180,7 @@ public class AddressManagementGUI extends javax.swing.JFrame {
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         // TODO add your handling code here:
-        switch(level){
-            case province:
+        
             String provinceName=provinceText.getText();
             javax.persistence.Query query=AddressManagementPUEntityManager.createNamedQuery("Province.findByName").setParameter("name", provinceName+"%");
             java.util.List<Province> result=query.getResultList();
@@ -196,9 +195,7 @@ public class AddressManagementGUI extends javax.swing.JFrame {
                     }
              });
             infoListView.setViewportView(infoList);
-            level=district;
-            break;
-        }
+            
     }//GEN-LAST:event_searchButtonActionPerformed
 
     private void addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMouseClicked
@@ -208,33 +205,68 @@ public class AddressManagementGUI extends javax.swing.JFrame {
 
     private void infoListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_infoListValueChanged
         // TODO add your handling code here:
-        ListModel model1=infoList.getModel();
-        String provinceid=new String();
-        String provinceName=(String) model1.getElementAt(evt.getFirstIndex());
-        javax.persistence.Query query=AddressManagementPUEntityManager.createNamedQuery("Province.findByName").setParameter("name", provinceName);
-        java.util.List<Province> provinceList=query.getResultList();
-        for(Province province: provinceList){
-            provinceid=province.getProvinceid();System.out.println(province.getName());
+        switch(level){
+        case province:
+            ListModel model1=infoList.getModel();
+            String provinceid=new String();
+            String provinceName=(String) model1.getElementAt(evt.getFirstIndex());
+            javax.persistence.Query query=AddressManagementPUEntityManager.createNamedQuery("Province.findByName").setParameter("name", provinceName);
+            java.util.List<Province> provinceList=query.getResultList();
+            for(Province province: provinceList){
+                provinceid=province.getProvinceid();System.out.println(province.getName());
+            }
+            query=AddressManagementPUEntityManager.createNamedQuery("District.findByProvinceid").setParameter("provinceid", provinceid);
+            java.util.List<District> findedDistrictList=query.getResultList();
+        
+            DefaultListModel model= new DefaultListModel();
+            for(District district:findedDistrictList){
+                model.addElement(district.getName());
+            }
+            infoList=new JList(model);
+            infoList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                        infoListValueChanged(evt);
+                    }
+                });
+        
+            infoListView.setViewportView(infoList);
+        
+            // Textfield
+            provinceText.setText("Nhập tên huyện");
+            provinceText.setForeground(new java.awt.Color(204, 204, 204));
+            break;
+        case district:
+            model1=infoList.getModel();
+            String districtid=new String();
+            String districtName=(String) model1.getElementAt(evt.getFirstIndex());
+            javax.persistence.Query districtquery=AddressManagementPUEntityManager.createNamedQuery("District.findByName").setParameter("name", districtName);
+            java.util.List<District> districtList=districtquery.getResultList();
+            for(District district: districtList){
+                districtid=district.getDistrictid();
+            }
+            query=AddressManagementPUEntityManager.createNamedQuery("Ward.findByDistrictid").setParameter("districtid", districtid);
+            java.util.List<District> wardtList=query.getResultList();
+        
+            model= new DefaultListModel();
+            for(District district:districtList){
+                model.addElement(district.getName());
+            }
+            infoList=new JList(model);
+            infoList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                        infoListValueChanged(evt);
+                    }
+                });
+        
+            infoListView.setViewportView(infoList);
+        
+            // Textfield
+            provinceText.setText("Nhập tên khu");
+            provinceText.setForeground(new java.awt.Color(204, 204, 204));
+            break;
+        case ward:
+            break;
         }
-        query=AddressManagementPUEntityManager.createNamedQuery("District.findByProvinceid").setParameter("provinceid", provinceid);
-        java.util.List<District> districtList=query.getResultList();
-        
-        DefaultListModel model= new DefaultListModel();
-        for(District district:districtList){
-            model.addElement(district.getName());
-        }
-        infoList=new JList(model);
-        infoList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-        public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                    infoListValueChanged(evt);
-                }
-            });
-        
-        infoListView.setViewportView(infoList);
-        
-        // Textfield
-        provinceText.setText("Nhập tên huyện");
-        provinceText.setForeground(new java.awt.Color(204, 204, 204));
     }//GEN-LAST:event_infoListValueChanged
 
     /**
