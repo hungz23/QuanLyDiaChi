@@ -15,6 +15,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.xml.bind.annotation.XmlRootElement;
 /**
@@ -44,7 +45,6 @@ public class AddressManagementGUI extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         AddressManagementPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("AddressManagementPU").createEntityManager();
         addressQuery = java.beans.Beans.isDesignTime() ? null : AddressManagementPUEntityManager.createQuery("SELECT a FROM Address a");
@@ -54,8 +54,8 @@ public class AddressManagementGUI extends javax.swing.JFrame {
         add = new javax.swing.JButton();
         searchButton = new javax.swing.JButton();
         provinceText = new javax.swing.JTextField();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        infoListView = new javax.swing.JScrollPane();
+        infoList = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -91,10 +91,12 @@ public class AddressManagementGUI extends javax.swing.JFrame {
             }
         });
 
-        org.jdesktop.swingbinding.JListBinding jListBinding = org.jdesktop.swingbinding.SwingBindings.createJListBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, provinceList, jList1);
-        bindingGroup.addBinding(jListBinding);
-
-        jScrollPane2.setViewportView(jList1);
+        infoList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        infoListView.setViewportView(infoList);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -108,12 +110,12 @@ public class AddressManagementGUI extends javax.swing.JFrame {
                         .addGap(49, 49, 49)
                         .addComponent(searchButton))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(275, 275, 275)
+                        .addGap(115, 115, 115)
                         .addComponent(add))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(51, 51, 51)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(441, Short.MAX_VALUE))
+                        .addGap(59, 59, 59)
+                        .addComponent(infoListView, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -124,13 +126,12 @@ public class AddressManagementGUI extends javax.swing.JFrame {
                         .addGap(1, 1, 1)
                         .addComponent(provinceText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(searchButton))
-                .addGap(46, 46, 46)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(109, 109, 109)
-                .addComponent(add))
+                .addGap(42, 42, 42)
+                .addComponent(infoListView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
+                .addComponent(add)
+                .addContainerGap())
         );
-
-        bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -151,10 +152,7 @@ public class AddressManagementGUI extends javax.swing.JFrame {
 
     private void searchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchButtonMouseClicked
         // TODO add your handling code here:
-        String provinceName=provinceText.getText();
-        javax.persistence.Query query=AddressManagementPUEntityManager.createNamedQuery("District.findAll");
-        java.util.List<District> data=query.getResultList();
-       
+        
         //provinceList.clear();
         
         //DefaultListModel model= new DefaultListModel();
@@ -168,18 +166,20 @@ public class AddressManagementGUI extends javax.swing.JFrame {
         //bindingGroup.addBinding(jListBinding);
 
 
-        jScrollPane2.setViewportView(jList1);
 
     }//GEN-LAST:event_searchButtonMouseClicked
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         // TODO add your handling code here:
         String provinceName=provinceText.getText();
-        javax.persistence.Query query=AddressManagementPUEntityManager.createNamedQuery("Province.findByName").setParameter("name", provinceName);
+        javax.persistence.Query query=AddressManagementPUEntityManager.createNamedQuery("Province.findByName").setParameter("name", provinceName+"%");
         java.util.List<Province> result=query.getResultList();
+        DefaultListModel model= new DefaultListModel();
         for(Province a:result){
-            System.out.println(a.getName());
+            model.addElement(a.getName());
         }
+        infoList=new JList(model);
+        infoListView.setViewportView(infoList);
     }//GEN-LAST:event_searchButtonActionPerformed
 
     private void addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMouseClicked
@@ -227,12 +227,11 @@ public class AddressManagementGUI extends javax.swing.JFrame {
     private javax.swing.JButton add;
     private java.util.List<entity.AddressManagement.Address> addressList;
     private javax.persistence.Query addressQuery;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JList<String> infoList;
+    private javax.swing.JScrollPane infoListView;
     private java.util.List provinceList;
     private javax.persistence.Query provinceQuery;
     private javax.swing.JTextField provinceText;
     private javax.swing.JButton searchButton;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }
