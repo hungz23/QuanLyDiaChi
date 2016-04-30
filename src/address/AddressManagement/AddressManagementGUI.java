@@ -93,7 +93,7 @@ public class AddressManagementGUI extends javax.swing.JFrame {
         });
 
         infoList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            String[] strings = { "Hà Nội", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
@@ -134,7 +134,7 @@ public class AddressManagementGUI extends javax.swing.JFrame {
                     .addComponent(searchButton))
                 .addGap(42, 42, 42)
                 .addComponent(infoListView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
                 .addComponent(add)
                 .addContainerGap())
         );
