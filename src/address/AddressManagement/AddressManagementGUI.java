@@ -184,12 +184,12 @@ public class AddressManagementGUI extends javax.swing.JFrame {
         for(Province a:result){
             model.addElement(a.getName());
         }
+        infoList=new JList(model);
         infoList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
         public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                     infoListValueChanged(evt);
                 }
             });
-        infoList=new JList(model);
         infoListView.setViewportView(infoList);
     }//GEN-LAST:event_searchButtonActionPerformed
 
@@ -215,12 +215,13 @@ public class AddressManagementGUI extends javax.swing.JFrame {
         for(District district:districtList){
             model.addElement(district.getName());
         }
+        infoList=new JList(model);
         infoList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
         public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                     infoListValueChanged(evt);
                 }
             });
-        infoList=new JList(model);
+        
         infoListView.setViewportView(infoList);
         
         // Textfield
