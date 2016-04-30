@@ -196,13 +196,15 @@ public class AddressManagementGUI extends javax.swing.JFrame {
     private void infoListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_infoListValueChanged
         // TODO add your handling code here:
         ListModel model=infoList.getModel();
-        String provinceid;
+        String provinceid=new String();
         String provinceName=(String) model.getElementAt(evt.getFirstIndex());
         javax.persistence.Query query=AddressManagementPUEntityManager.createNamedQuery("Province.findByName").setParameter("name", provinceName);
         java.util.List<Province> provinceList=query.getResultList();
         for(Province province: provinceList){
             provinceid=province.getProvinceid();
         }
+        query=AddressManagementPUEntityManager.createNamedQuery("District.findByProvinceid").setParameter("provinceid", provinceid);
+        java.util.List<District> districtList=query.getResultList();
     }//GEN-LAST:event_infoListValueChanged
 
     /**
