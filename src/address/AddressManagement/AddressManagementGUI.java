@@ -5,8 +5,10 @@
  */
 package address.AddressManagement;
 
+import static address.AddressManagement.Level.address;
 import static address.AddressManagement.Level.district;
 import static address.AddressManagement.Level.province;
+import static address.AddressManagement.Level.ward;
 import java.awt.Color;
 import entity.AddressManagement.*;
 import java.beans.Beans;
@@ -234,6 +236,7 @@ public class AddressManagementGUI extends javax.swing.JFrame {
             // Textfield
             provinceText.setText("Nhập tên huyện");
             provinceText.setForeground(new java.awt.Color(204, 204, 204));
+            level=district;
             break;
         case district:
             model1=infoList.getModel();
@@ -245,11 +248,11 @@ public class AddressManagementGUI extends javax.swing.JFrame {
                 districtid=district.getDistrictid();
             }
             query=AddressManagementPUEntityManager.createNamedQuery("Ward.findByDistrictid").setParameter("districtid", districtid);
-            java.util.List<District> wardtList=query.getResultList();
+            java.util.List<Ward> findedWardList=query.getResultList();
         
             model= new DefaultListModel();
-            for(District district:districtList){
-                model.addElement(district.getName());
+            for(Ward ward:findedWardList){
+                model.addElement(ward.getName());
             }
             infoList=new JList(model);
             infoList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -263,8 +266,39 @@ public class AddressManagementGUI extends javax.swing.JFrame {
             // Textfield
             provinceText.setText("Nhập tên khu");
             provinceText.setForeground(new java.awt.Color(204, 204, 204));
+            level=ward;
             break;
         case ward:
+            model1=infoList.getModel();
+            String wardid=new String();
+            String wardName=(String) model1.getElementAt(evt.getFirstIndex());
+            query=AddressManagementPUEntityManager.createNamedQuery("Ward.findByName").setParameter("name", wardName);
+            java.util.List<Ward> wardList=query.getResultList();
+            for(Ward ward: wardList){
+                wardid=ward.getWardid();
+            }
+            query=AddressManagementPUEntityManager.createNamedQuery("Address.findByWardid").setParameter("wardid", wardid);
+            java.util.List<Address> addressList=query.getResultList();
+        
+            model= new DefaultListModel();
+            for(Address address:addressList){
+                model.addElement(address.getName());
+            }
+            infoList=new JList(model);
+            infoList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                        infoListValueChanged(evt);
+                    }
+                });
+        
+            infoListView.setViewportView(infoList);
+        
+            // Textfield
+            provinceText.setText("");
+            provinceText.setForeground(new java.awt.Color(204, 204, 204));
+            level=address;
+            break;
+        default:
             break;
         }
     }//GEN-LAST:event_infoListValueChanged
