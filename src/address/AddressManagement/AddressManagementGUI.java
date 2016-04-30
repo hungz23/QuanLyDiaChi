@@ -196,6 +196,7 @@ public class AddressManagementGUI extends javax.swing.JFrame {
     private void infoListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_infoListValueChanged
         // TODO add your handling code here:
         ListModel model=infoList.getModel();
+        String provinceName=(String) model.getElementAt(evt.getFirstIndex());
     }//GEN-LAST:event_infoListValueChanged
 
     /**
