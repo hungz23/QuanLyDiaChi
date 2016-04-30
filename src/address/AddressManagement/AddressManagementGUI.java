@@ -206,7 +206,7 @@ public class AddressManagementGUI extends javax.swing.JFrame {
         javax.persistence.Query query=AddressManagementPUEntityManager.createNamedQuery("Province.findByName").setParameter("name", provinceName);
         java.util.List<Province> provinceList=query.getResultList();
         for(Province province: provinceList){
-            provinceid=province.getProvinceid();
+            provinceid=province.getProvinceid();System.out.println(province.getName());
         }
         query=AddressManagementPUEntityManager.createNamedQuery("District.findByProvinceid").setParameter("provinceid", provinceid);
         java.util.List<District> districtList=query.getResultList();
@@ -224,6 +224,8 @@ public class AddressManagementGUI extends javax.swing.JFrame {
         infoListView.setViewportView(infoList);
         
         // Textfield
+        provinceText.setText("Nhập tên huyện");
+        provinceText.setForeground(new java.awt.Color(204, 204, 204));
     }//GEN-LAST:event_infoListValueChanged
 
     /**
